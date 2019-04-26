@@ -1,14 +1,4 @@
-# Local Kubernetes cluster using Vagrant and VirtualBox
-
-## Dependencies
-
-You should install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](https://www.vagrantup.com/downloads.html) before you start.
-
-## Creating the cluster
-
-You should create a `Vagrantfile` in an empty directory with the following content:
-
-```servers = [
+servers = [
     {
         :name => "master",
         :type => "master",
@@ -141,21 +131,4 @@ Vagrant.configure("2") do |config|
 
     end
 
-end  
-```
-
-## Starting the cluster
-
-You can create the cluster with:
-
-```bash
-$ vagrant up
-```
-
-## Clean up
-
-You can delete the cluster with:
-
-```bash
-$ vagrant destroy -f
-```
+end 
