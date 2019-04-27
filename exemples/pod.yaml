@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx
+  name: web
+  namespace:  dev
   labels:
-    name: nginx
+    name: "web_application"
 spec:
   containers:
-  - name: nginx
-    image: nginx
+  - name: webapp
+    image: dragrom/exemple_deployment:v1
     ports:
     - containerPort: 80

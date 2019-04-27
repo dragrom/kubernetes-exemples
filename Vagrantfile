@@ -61,8 +61,9 @@ EOF
 
     # ip of this box
     IP_ADDR=`ifconfig enp0s8 | grep Mask | awk '{print $2}'| cut -f2 -d:`
+    
     # set node-ip
-    sudo echo 'Environment="KUBELET_EXTRA_ARGS=--node-ip=$IP_ADDR' | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    sudo echo Environment="KUBELET_EXTRA_ARGS=--node-ip=$IP_ADDR" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
 SCRIPT
