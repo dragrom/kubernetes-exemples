@@ -1,5 +1,21 @@
 # Local Kubernetes cluster using Vagrant and VirtualBox
 
+Create a local Kubernetes cluster, with one master and 2 nodes
+
+## How to use this cluster
+
+- Clone this repository on your machine:
+
+```
+https://github.com/dragrom/kubernetes-exemples.git
+```
+
+- Install all dependiences
+- Start the cluster
+- Play with it
+- Destroy the cluster, to save the resources
+
+
 ## Dependencies
 
 You should install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](https://www.vagrantup.com/downloads.html) before you start.
