@@ -1,0 +1,20 @@
+apiVersion:  apps/v1
+kind:  Deployment
+metadata:
+  name: web-deployment
+  namespace: dev
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      name: webapp
+  template:
+    metadata:
+      labels:
+        name: webapp
+    spec:
+      containers:
+      - image: dragrom/exemple_deployment:v1
+        name: web
+        ports:
+        - containerPort: 80

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Install vagrant on Ubuntu and CentOS
+# Install vagrant and VirtualBox on Ubuntu and CentOS
 
 distribution=$(lsb_release -is)
 

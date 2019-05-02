@@ -6,6 +6,8 @@ metadata:
 spec:
   type:  ClusterIP
   selector:
-    name: web
+    name: webapp
   ports:
   - port: 80
+    targetPort:  8080
+    protocol:  TCP
