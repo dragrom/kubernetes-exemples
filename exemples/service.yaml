@@ -4,10 +4,11 @@ metadata:
   name: web-service
   namespace:  dev
 spec:
-  type:  ClusterIP
+  type:  NodePort
   selector:
     name: webapp
   ports:
   - port: 80
-    targetPort:  8080
+    targetPort:  80
+    nodePort:  30080
     protocol:  TCP

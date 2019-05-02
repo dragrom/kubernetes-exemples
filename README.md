@@ -157,5 +157,68 @@ $ vagrant up
 You can delete the cluster with:
 
 ```bash
-$ vagrant destroy -f
+ vagrant destroy -f
 ```
+
+# Playing with kubernetes
+
+After the cluster is up, you can start to play with kubernetes.
+To access the master server, run:
+
+```
+vagrant ssh master
+```
+
+To access a node, run:
+
+```
+vagrant ssh <nodename>
+```
+
+## List the available node in cluster
+
+```
+kubectl get nodes -o wide
+```
+
+## Create namespaces
+
+```
+kubectl create -f /vagrant/exemples/create_namespaces.yaml
+```
+
+The ```dev``` and ```prod``` namespaces will be created
+
+## Create a deployment
+
+```
+kubectl create -f /vagrant/exemples/deployment.yaml
+```
+A deployment called web-deployment will be created in dev namespace
+
+To list the pods created by the deployment, run:
+
+```
+kubectl -n dev get pods
+``` 
+
+To vuew the list of deployments created in dev namespace, run:
+
+```
+kubectl -n dev get deployments
+```
+
+## Create a service to expose the deployment
+
+```
+kubectl create -f /vagrant/exemples/service.yaml
+```
+
+This command will create a service called web-service, in dev namespace.
+To view the services created in dev namespace, run:
+
+```
+kubectl get svc -n dev
+```
+
+

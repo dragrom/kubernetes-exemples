@@ -83,7 +83,7 @@ $configureMaster = <<-SCRIPT
     chown $(id -u vagrant):$(id -g vagrant) /home/vagrant/.kube/config
     
     # Configure flannel. Run command as vagrant user
-    su - vagrant -c "kubectl create -f /vagrant/pod-networks/kube-flannel.yml"
+    su - vagrant -c "kubectl create -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml"
 
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
