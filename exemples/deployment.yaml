@@ -14,7 +14,7 @@ spec:
         name: webapp
     spec:
       containers:
-      - image: linuxacademycontent/kubeserve:v1
+      - image: dragrom/kubeserve:v1
         name: web
         ports:
         - containerPort: 80
