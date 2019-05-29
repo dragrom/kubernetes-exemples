@@ -1,0 +1,16 @@
+apiVersion:  batch/v1
+kind:  Job
+metadata:
+  name:  test
+  namespace:  dev
+spec:
+  completions:  10
+  parallelism:  2
+  activeDeadlineSeconds: 60
+  template:
+    spec:
+      containers:
+      - name:  test
+        image:  alpine:latest
+        command:  ["echo", "Hello!"]
+      restartPolicy: Never

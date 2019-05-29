@@ -32,7 +32,7 @@ $configureBox = <<-SCRIPT
 
     # install docker
     apt-get update
-    apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+    apt-get install -y apt-transport-https curl ebtables ethtool
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     add-apt-repository "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
     apt-get update && apt-get install -y docker-ce
@@ -46,15 +46,22 @@ $configureBox = <<-SCRIPT
     deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
+    # echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+    # sudo sysctl -p
+    # bridged traffic to iptables is enabled for kube-router.
+    cat >> /etc/ufw/sysctl.conf <<EOF
+    net/bridge/bridge-nf-call-ip6tables = 1
+    net/bridge/bridge-nf-call-iptables = 1
+    net/bridge/bridge-nf-call-arptables = 1
+EOF
+    sudo sysctl -p
+
     apt-get update
     apt-get install -y kubelet kubeadm kubectl
     apt-mark hold kubelet kubeadm kubectl
 
     # kubelet requires swap off
     swapoff -a
-
-    echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
-    sudo sysctl -p
 
     # keep swap off after reboot
     sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
@@ -66,6 +73,9 @@ EOF
     sudo echo Environment="KUBELET_EXTRA_ARGS=--node-ip=$IP_ADDR" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
+
+    # Install multicast
+    apt-get -qq install -y avahi-daemon libnss-mdns
 SCRIPT
 
 $configureMaster = <<-SCRIPT
@@ -75,7 +85,7 @@ $configureMaster = <<-SCRIPT
 
     # install kkubernetes master
     HOST_NAME=$(hostname -s)
-    sudo kubeadm init --apiserver-advertise-address=$IP_ADDR --apiserver-cert-extra-sans=$IP_ADDR --node-name $HOST_NAME --pod-network-cidr=10.244.0.0/16
+    sudo kubeadm init --apiserver-advertise-address=$IP_ADDR --pod-network-cidr=10.244.0.0/16
 
     #copying credentials to regular user - vagrant
     sudo --user=vagrant mkdir -p /home/vagrant/.kube
@@ -83,7 +93,7 @@ $configureMaster = <<-SCRIPT
     chown $(id -u vagrant):$(id -g vagrant) /home/vagrant/.kube/config
     
     # Configure flannel. Run command as vagrant user
-    su - vagrant -c "kubectl create -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml"
+    su - vagrant -c "kubectl create -f /vagrant/pod-networks/kube-flannel.yml"
 
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
@@ -132,4 +142,4 @@ Vagrant.configure("2") do |config|
 
     end
 
-end 
+end

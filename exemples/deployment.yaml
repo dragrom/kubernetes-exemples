@@ -14,7 +14,7 @@ spec:
         name: webapp
     spec:
       containers:
-      - image: dragrom/kubeserve:v1
+              - image: nginx:1.7.1
         name: web
         ports:
         - containerPort: 80
