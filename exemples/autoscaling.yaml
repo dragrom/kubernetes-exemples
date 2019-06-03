@@ -1,4 +1,4 @@
-apiVersion:  autoscaling/v1
+apiVersion:  autoscaling/v2beta1
 kind:  HorizontalPodAutoscaler
 metadata:
   name:  web-autoscaler
@@ -7,8 +7,12 @@ spec:
   maxReplicas:  10
   minReplicas:  5
   scaleTargetRef:
-    apiVersion: apps/v1beta1
+    apiVersion: extensions/v1beta1
     kind: Deployment
     name: web-deployment
-  targetCPUUtilizationPercentage: 50
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 50
 

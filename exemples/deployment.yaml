@@ -14,7 +14,10 @@ spec:
         name: webapp
     spec:
       containers:
-              - image: nginx:1.7.1
+      - image: nginx:1.7.1
         name: web
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: 200m

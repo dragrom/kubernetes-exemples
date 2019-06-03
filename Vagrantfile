@@ -95,6 +95,9 @@ $configureMaster = <<-SCRIPT
     # Configure flannel. Run command as vagrant user
     su - vagrant -c "kubectl create -f /vagrant/pod-networks/kube-flannel.yml"
 
+    sed -i "s/    - kube-controller-manager/    - kube-controller-manager \\n    - --horizontal-pod-autoscaler-use-rest-clients=true /g" /etc/kubernetes/manifests/kube-controller-manager.yaml
+
+
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
 
@@ -103,7 +106,11 @@ $configureMaster = <<-SCRIPT
 
     # required for setting up password less ssh between guest VMs
     sudo sed -i "/^[^#]*PasswordAuthentication[[:space:]]no/c\PasswordAuthentication yes" /etc/ssh/sshd_config
-    sudo service sshd restart
+    sudo service sshd restart    
+
+    # Install metrics server
+    su - vagrant -c "kubectl create -f /vagrant/metrics-server/deploy/1.8+/"
+
 SCRIPT
 
 $configureNode = <<-SCRIPT
