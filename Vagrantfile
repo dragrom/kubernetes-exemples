@@ -96,7 +96,7 @@ $configureMaster = <<-SCRIPT
     su - vagrant -c "kubectl create -f /vagrant/pod-networks/kube-flannel.yml"
 
     sed -i "s/    - kube-controller-manager/    - kube-controller-manager \\n    - --horizontal-pod-autoscaler-use-rest-clients=true /g" /etc/kubernetes/manifests/kube-controller-manager.yaml
-
+    sed -i "s/--network-plugin=cni//g" /var/lib/kubelet/kubeadm-flags.env
 
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
@@ -118,6 +118,9 @@ $configureNode = <<-SCRIPT
     apt-get install -y sshpass
     sshpass -p "vagrant" scp -o StrictHostKeyChecking=no vagrant@192.168.2.10:/etc/kubeadm_join_cmd.sh .
     sh ./kubeadm_join_cmd.sh
+    sed -i "s/--network-plugin=cni//g" /var/lib/kubelet/kubeadm-flags.env
+    sudo systemctl daemon-reload
+    sudo systemctl restart kubelet
 SCRIPT
 
 Vagrant.configure("2") do |config|
