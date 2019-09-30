@@ -57,7 +57,7 @@ EOF
     sudo sysctl -p
 
     apt-get update
-    apt-get install -y kubelet kubeadm kubectl
+    apt-get install -y kubelet=1.13.11-00 kubeadm=1.13.11-00 kubectl=1.13.11-00
     apt-mark hold kubelet kubeadm kubectl
 
     # kubelet requires swap off
@@ -93,10 +93,9 @@ $configureMaster = <<-SCRIPT
     chown $(id -u vagrant):$(id -g vagrant) /home/vagrant/.kube/config
     
     # Configure flannel. Run command as vagrant user
-    su - vagrant -c "kubectl create -f /vagrant/pod-networks/kube-flannel.yml"
+    su - vagrant -c "kubectl apply -f /vagrant/pod-networks/kube-flannel.yml"
 
     sed -i "s/    - kube-controller-manager/    - kube-controller-manager \\n    - --horizontal-pod-autoscaler-use-rest-clients=true /g" /etc/kubernetes/manifests/kube-controller-manager.yaml
-    sed -i "s/--network-plugin=cni//g" /var/lib/kubelet/kubeadm-flags.env
 
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
@@ -118,7 +117,6 @@ $configureNode = <<-SCRIPT
     apt-get install -y sshpass
     sshpass -p "vagrant" scp -o StrictHostKeyChecking=no vagrant@192.168.2.10:/etc/kubeadm_join_cmd.sh .
     sh ./kubeadm_join_cmd.sh
-    sed -i "s/--network-plugin=cni//g" /var/lib/kubelet/kubeadm-flags.env
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
 SCRIPT
