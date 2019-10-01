@@ -1,12 +1,3 @@
-# Create namespace dev
-apiVersion: v1
-kind:  Namespace
-metadata:
-  name:  dev
-  labels:
-    name: "Developement"
-
----
 apiVersion:  apps/v1
 kind:  Deployment
 metadata:
@@ -27,19 +18,7 @@ spec:
         name: web
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: "20m"
 
----
-apiVersion:  v1
-kind: Service
-metadata:
-  name: web-service
-  namespace:  dev
-spec:
-  type:  NodePort
-  selector:
-    name: webapp
-  ports:
-  - port: 80
-    targetPort:  80
-    nodePort:  30080
-    protocol:  TCP

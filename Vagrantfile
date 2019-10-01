@@ -95,6 +95,7 @@ $configureMaster = <<-SCRIPT
     # Configure flannel. Run command as vagrant user
     su - vagrant -c "kubectl apply -f /vagrant/pod-networks/kube-flannel.yml"
 
+    # Need by metrics server
     sed -i "s/    - kube-controller-manager/    - kube-controller-manager \\n    - --horizontal-pod-autoscaler-use-rest-clients=true /g" /etc/kubernetes/manifests/kube-controller-manager.yaml
 
     sudo systemctl daemon-reload
@@ -109,6 +110,15 @@ $configureMaster = <<-SCRIPT
 
     # Install metrics server
     su - vagrant -c "kubectl create -f /vagrant/metrics-server/deploy/1.8+/"
+
+    # Install dashboard
+    su - vagrant -c "kubectl apply -f /vagrant/dashboard/"
+
+    # Obtain admin-user token to access dashboard and save it to a file
+
+    ADMIN_USER=`su - vagrant -c "kubectl -n kube-system get secret | grep admin-user" | awk '{print $1}'`
+    ADMIN_TOKEN=`su - vagrant -c "kubectl -n kube-system describe secret $ADMIN_USER|grep token:"|awk '{print $2}'`
+    echo "$ADMIN_TOKEN" > token.txt
 
 SCRIPT
 
