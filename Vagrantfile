@@ -132,6 +132,7 @@ $configureNode = <<-SCRIPT
 SCRIPT
 
 Vagrant.configure("2") do |config|
+    config.vm.synced_folder "volumes/", "/mnt/volumes"
 
     servers.each do |opts|
         config.vm.define opts[:name] do |config|
