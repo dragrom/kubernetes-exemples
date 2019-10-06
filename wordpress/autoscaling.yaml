@@ -1,0 +1,13 @@
+apiVersion:  autoscaling/v1
+kind:  HorizontalPodAutoscaler
+metadata:
+  name:  web-autoscaler
+  namespace:  wordpress
+spec:
+  maxReplicas:  10
+  minReplicas:  2
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: wordpress
+  targetCPUUtilizationPercentage: 50

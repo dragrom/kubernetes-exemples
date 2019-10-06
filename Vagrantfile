@@ -104,22 +104,15 @@ $configureMaster = <<-SCRIPT
     kubeadm token create --print-join-command >> /etc/kubeadm_join_cmd.sh
     chmod +x /etc/kubeadm_join_cmd.sh
 
-    # required for setting up password less ssh between guest VMs
-    sudo sed -i "/^[^#]*PasswordAuthentication[[:space:]]no/c\PasswordAuthentication yes" /etc/ssh/sshd_config
-    sudo service sshd restart    
-
     # Install metrics server
     su - vagrant -c "kubectl create -f /vagrant/metrics-server/deploy/1.8+/"
 
     # Install dashboard
     su - vagrant -c "kubectl apply -f /vagrant/dashboard/"
 
-    # Obtain admin-user token to access dashboard and save it to a file
-
-    ADMIN_USER=`su - vagrant -c "kubectl -n kube-system get secret | grep admin-user" | awk '{print $1}'`
-    ADMIN_TOKEN=`su - vagrant -c "kubectl -n kube-system describe secret $ADMIN_USER|grep token:"|awk '{print $2}'`
-    echo "$ADMIN_TOKEN" > token.txt
-
+    # required for setting up password less ssh between guest VMs
+    sudo sed -i "/^[^#]*PasswordAuthentication[[:space:]]no/c\PasswordAuthentication yes" /etc/ssh/sshd_config
+    sudo service sshd restart    
 SCRIPT
 
 $configureNode = <<-SCRIPT
@@ -132,7 +125,7 @@ $configureNode = <<-SCRIPT
 SCRIPT
 
 Vagrant.configure("2") do |config|
-    config.vm.synced_folder "volumes/", "/mnt/volumes"
+    config.vm.synced_folder "~/volumes/", "/mnt/volumes"
 
     servers.each do |opts|
         config.vm.define opts[:name] do |config|

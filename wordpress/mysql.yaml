@@ -36,10 +36,9 @@ spec:
       volumes:
       - name: storage
         persistentVolumeClaim:
-          # Name of the PVC created earlier
-          claimName: mysql-persistent-volume-claim
+          claimName: mysql-persistent-volume
       containers:
-      - image: mysql:5.6
+      - image: mysql:5.7
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -52,4 +51,4 @@ spec:
           name: mysql
         volumeMounts:
         - name: storage  # which data will be stored
-          mountPath: "/var/lib/mysql"
+          mountPath: "/var/lib/mysql1"

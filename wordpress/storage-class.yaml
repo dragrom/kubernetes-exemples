@@ -2,6 +2,14 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   namespace: wordpress
-  name: manual
+  name: mysql-sc
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  namespace: wordpress
+  name: wordpress-sc
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer

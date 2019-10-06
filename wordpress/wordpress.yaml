@@ -8,12 +8,13 @@ metadata:
 spec:
   ports:
     - port: 80
-    - NodePort: 30082
+      nodePort: 30082
   selector:
     app: wordpress
     tier: frontend
   type: NodePort
-apiVersion: apps/v1
+---
+apiVersion: apps/v1 
 kind: Deployment
 metadata:
   namespace: wordpress
@@ -42,15 +43,18 @@ spec:
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-pass          # generated before in secret.yml
+              name: mysql-pass
               key: password
         ports:
         - containerPort: 80
           name: wordpress
+        resources:
+          requests:
+            cpu: "200m"
         volumeMounts:
-        - name: wordpress-persistent-volume
-          mountPath: "/var/www/html"          # which data will be stored
+        - name: storage
+          mountPath: /var/www/html
       volumes:
-      - name: wordpress-persistent-volume
+      - name: storage
         persistentVolumeClaim:
           claimName: wordpress-persistent-volume
