@@ -51,4 +51,5 @@ spec:
           name: mysql
         volumeMounts:
         - name: storage  # which data will be stored
-          mountPath: "/var/lib/mysql1"
+          mountPath: /var/lib/mysql
+          subPath: mysql
