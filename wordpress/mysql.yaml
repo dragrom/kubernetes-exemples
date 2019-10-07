@@ -8,10 +8,10 @@ metadata:
 spec:
   ports:
     - port: 3306
+      targetPort: 3306
   selector:
     app: wordpress
     tier: mysql
-  clusterIP: None
 ---
 apiVersion:  apps/v1
 kind: Deployment
@@ -40,12 +40,18 @@ spec:
       containers:
       - image: mysql:5.7
         name: mysql
+        args:
+          - "--innodb_use_native_aio=0"
+          - "--bind-address=0.0.0.0"
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-pass        # the one generated before in secret.yml
               key: password
+        - name: MYSQL_ROOT_HOST
+          value: '%'
+        
         ports:
         - containerPort: 3306
           name: mysql
