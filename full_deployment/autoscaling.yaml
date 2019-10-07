@@ -4,7 +4,7 @@ metadata:
   name:  web-autoscaler
   namespace:  dev
 spec:
-  maxReplicas:  10
+  maxReplicas:  20
   minReplicas:  2
   scaleTargetRef:
     apiVersion: extensions/v1beta1
